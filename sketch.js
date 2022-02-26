@@ -2,58 +2,40 @@ const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
+var engine, world, backgroundImg;
 
-var engine, world;
-var canvas;
-var palyer, playerBase, playerArcher;
-var baseimage;
+var canvas, angle, tower, ground, cannon;
 
 function preload() {
-  backgroundImg = loadImage("./assets/background.png");
-  baseimage = loadImage("./assets/base.png");
-  playerimage = loadImage("./assets/player.png");
+  backgroundImg = loadImage("./assets/background.gif");
+  towerImage = loadImage("./assets/tower.png");
 }
 
 function setup() {
-  canvas = createCanvas(windowWidth, windowHeight);
 
+  canvas = createCanvas(1200, 600);
   engine = Engine.create();
   world = engine.world;
-  angleMode(DEGREES);
-
   var options = {
-    isStatic: true
-  };
+    isStatic:true
+  }
+  ground=Bodies.rectangle(0,height-1,width*2,1,options) 
+  World.add(world,ground)
 
-  playerBase = Bodies.rectangle(200, 350, 180, 150, options);
-  World.add(world, playerBase);
+  tower=Bodies.rectangle(160,350,160,310,options)
+  World.add(world,tower)
 
-  player = Bodies.rectangle(250, playerBase.position.y - 160, 50, 180, options);
-  World.add(world,player)
-
- // playerArcher = new ( 340, playerBase.position.y - 112, 120, 120);
-  playerArcher = new PlayerArcher( 340, playerBase.position.y - 112, 120, 120);
- // playerArcher =  PlayerArcher( 340, playerBase.position.y - 112, 120, 120);
- // playerArcher = new PlayerArcher( );
-
+  cannon = new Cannon(180,110,30,30,20)
 }
 
 function draw() {
-  background(backgroundImg);
-  image(baseimage,playerBase.position.x,playerBase.position.y,180,150)
-  image(playerimage,player.position.x,player.position.y,50,180)
-
+  image(backgroundImg,0,0,1200,600)
   Engine.update(engine);
-
-
-  // playerArcher.display;
-  // playerArcherdisplay();
-   playerArcher.display();
-  // display();
-
-  // Title
-  fill("#FFFF");
-  textAlign("center");
-  textSize(40);
-  text("EPIC ARCHERY", width / 2, 100);
+  
+  rect(ground.position.x,ground.position.y,width*2,1)
+  push()
+  imageMode(CENTER)
+  image(towerImage,tower.position.x,tower.position.y,160,310)
+  pop()
+  cannon.display()
 }
